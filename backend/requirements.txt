@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+opencv-python
+mediapipe
+numpy
+firebase-admin
+pydantic
+python-dotenv
+pillow
+pytest
+face-recognition
