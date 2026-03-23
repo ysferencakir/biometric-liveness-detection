@@ -1,0 +1,1 @@
+"""Random challenge generator."""
