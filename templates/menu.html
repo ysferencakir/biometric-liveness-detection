@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Yüz Tanıma Sistemi - Ana Menü{% endblock %}
+
+{% block content %}
+<h1>👤 Yüz Tanıma Sistemi</h1>
+
+<p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em;">
+    Lütfen yapmak istediğiniz işlemi seçin:
+</p>
+
+<a href="{{ url_for('register') }}" class="menu-item">
+    📝 Yeni Yüz Kaydet
+</a>
+
+<a href="{{ url_for('login') }}" class="menu-item">
+    🔐 Yüz ile Giriş Yap
+</a>
+
+<a href="{{ url_for('liveness_detection') }}" class="menu-item">
+    ✅ Canlılık Testi
+</a>
+
+<a href="{{ url_for('users_list') }}" class="menu-item">
+    👥 Kayıtlı Kullanıcılar
+</a>
+
+<style>
+    .info-box {
+        background: #e7f3ff;
+        border-left: 4px solid #2196F3;
+        padding: 15px;
+        margin-top: 30px;
+        border-radius: 5px;
+        color: #0c5460;
+    }
+    
+    .info-box h3 {
+        color: #0c5460;
+        margin-bottom: 10px;
+    }
+    
+    .info-box ul {
+        margin-left: 20px;
+        line-height: 1.6;
+    }
+</style>
+
+<div class="info-box">
+    <h3>ℹ️  Bilgi</h3>
+    <ul>
+        <li><strong>Yeni Yüz Kaydet:</strong> Yüzünüzü sistemde kaydetmek için kullanın</li>
+        <li><strong>Yüz ile Giriş:</strong> Kaydedilmiş yüzünüzle giriş yapın</li>
+        <li><strong>Canlılık Testi:</strong> Gerçek bir kişi olduğunuzu doğrulayın (yeşil/kırmızı kare)</li>
+        <li><strong>Kayıtlı Kullanıcılar:</strong> Sistemdeki tüm kayıtlı kişileri görün</li>
+    </ul>
+</div>
+{% endblock %}

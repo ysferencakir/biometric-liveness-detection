@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Kayıtlı Kullanıcılar{% endblock %}
+
+{% block content %}
+<h1>👥 Kayıtlı Kullanıcılar</h1>
+
+{% if users %}
+    <div style="margin-top: 30px;">
+        <p style="color: #666; margin-bottom: 20px;">
+            Toplam <strong>{{ users|length }}</strong> kullanıcı kayıtlı:
+        </p>
+        
+        {% for user in users %}
+        <div class="user-item">
+            <div class="user-name">👤 {{ user }}</div>
+            <button onclick="deleteUser('{{ user }}')" class="button button-danger" style="width: auto; padding: 8px 15px; font-size: 0.9em;">
+                🗑️  Sil
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info" style="margin-top: 30px;">
+        ℹ️  Henüz kayıtlı kullanıcı bulunmuyor.
+        <a href="{{ url_for('register') }}" style="color: #0c5460; text-decoration: none; font-weight: 600;">
+            Hemen kayıt olun →
+        </a>
+    </div>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="back-button">← Ana Menüye Dön</a>
+
+<script>
+    function deleteUser(name) {
+        if (confirm(`"${name}" kullanıcısını silmek istediğinizden emin misiniz?`)) {
+            fetch(`/delete-user/${name}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✓ Kullanıcı silindi!');
+                    location.reload();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Hata: ' + error);
+            });
+        }
+    }
+</script>
+{% endblock %}
