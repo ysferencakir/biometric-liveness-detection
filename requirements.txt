@@ -1,5 +1,19 @@
-Flask>=2.3.0
+# Backend
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+
+# Görüntü işleme & makine öğrenmesi
 opencv-python>=4.8.0
-numpy>=1.26.0
-Werkzeug>=2.3.0
 mediapipe>=0.10.0
+numpy>=1.26.0
+pillow
+
+# Test
+pytest
+pytest-asyncio
+httpx
+
+# Firebase (opsiyonel)
+# firebase-admin

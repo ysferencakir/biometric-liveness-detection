@@ -1,1 +1,0 @@
-"""Blink verification logic."""
