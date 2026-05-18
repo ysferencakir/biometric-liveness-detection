@@ -5,24 +5,27 @@ from utils.constants import FACE_MATCH_THRESHOLD, MIN_PASSED_CHECKS
 def decide(
     recognition_result: dict,
     liveness_results: list[ModuleResult],
+    liveness_pre_verified: bool = False,
 ) -> dict:
     """
     Yüz tanıma + canlılık modüllerinin sonuçlarını birleştirip
     nihai erişim kararı verir.
 
-    recognition_result: recognize_from_frames() çıktısı
+    recognition_result:
         {"user": str|None, "score": float, "recognized": bool}
-    liveness_results: LivenessManager.run() çıktısı
-        [ModuleResult(...), ...]
+    liveness_results:
+        [ModuleResult(...), ...]  — liveness_pre_verified=True ise boş liste olabilir
+    liveness_pre_verified:
+        True ise frontend challenge adımı zaten geçilmiş, liveness yeniden kontrol edilmez.
 
     Dönüş:
         {"granted": bool, "reason": str, "details": dict}
     """
-    # --- Yüz tanıma kontrolü ---
     recognized = recognition_result.get("recognized", False)
     rec_score   = recognition_result.get("score", 0.0)
     user        = recognition_result.get("user")
 
+    # --- Yüz tanıma kontrolü ---
     if not recognized or rec_score < FACE_MATCH_THRESHOLD:
         return {
             "granted": False,
@@ -31,7 +34,19 @@ def decide(
         }
 
     # --- Canlılık kontrolü ---
-    active_modules = {"blink_detection", "eye_movement", "head_movement"}
+    # Frontend challenge adımı geçildiyse ikinci kez kontrol etme
+    if liveness_pre_verified:
+        return {
+            "granted": True,
+            "reason": f"Erişim onaylandı: {user}",
+            "details": {
+                "user": user,
+                "recognition_score": round(rec_score, 3),
+                "liveness_source": "challenge_step",
+            },
+        }
+
+    active_modules = {"blink_detection", "eye_movement", "head_movement", "mouth_movement"}
     passed_count = sum(1 for r in liveness_results if r.passed)
     has_active   = any(r.module_name in active_modules and r.passed for r in liveness_results)
 

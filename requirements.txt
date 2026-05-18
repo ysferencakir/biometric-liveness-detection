@@ -10,6 +10,13 @@ mediapipe>=0.10.0
 numpy>=1.26.0
 pillow
 
+# Yüz tanıma — deepface/Facenet (Python 3.13 desteği var, önerilen)
+deepface>=0.0.93
+tf-keras
+# Fallback: eğer deepface yüklü değilse MediaPipe landmark tabanlı tanıma devreye girer
+# İsteğe bağlı yükseltme (Python ≤3.12 + C++ Build Tools):
+#   pip install cmake dlib face_recognition
+
 # Test
 pytest
 pytest-asyncio

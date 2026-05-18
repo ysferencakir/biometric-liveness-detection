@@ -3,7 +3,6 @@ from pydantic import BaseModel, field_validator
 
 class RegisterRequest(BaseModel):
     name: str
-    # Base64 kodlu JPEG/PNG frame listesi (frontend kamerasından)
     frames: list[str]
 
     @field_validator("name")
@@ -28,7 +27,6 @@ class RegisterResponse(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    # Birden fazla frame gönderilir; tanıma sliding window ile yapılır
     frames: list[str]
 
 
@@ -38,14 +36,69 @@ class LoginResponse(BaseModel):
     message: str
 
 
+class ModuleResultSchema(BaseModel):
+    module_name: str
+    passed: bool
+    score: float
+    details: dict
+
+
 class LivenessRequest(BaseModel):
-    # Her eleman: {frame: base64_string, timestamp_ms: int}
     frames: list[dict]
 
 
 class LivenessResponse(BaseModel):
     is_live: bool
     message: str
+    modules: list[ModuleResultSchema] = []
+
+
+class AuthenticateRequest(BaseModel):
+    """Tek çağrıda liveness + tanıma + karar."""
+    frames: list[str]
+    username: str | None = None
+    liveness_verified: bool = False
+
+
+class AuthenticateResponse(BaseModel):
+    granted: bool
+    reason: str
+    user: str | None = None
+    recognition_score: float | None = None
+    liveness: list[ModuleResultSchema] = []
+
+
+class ChallengeRequest(BaseModel):
+    """Tek bir liveness challenge testi."""
+    challenge: str   # "blink" | "head_movement" | "eye_movement"
+    frames: list[dict]  # [{frame: base64, timestamp_ms: int}]
+
+
+class ChallengeResponse(BaseModel):
+    challenge: str
+    passed: bool
+    score: float
+    message: str
+    details: dict = {}
+
+
+class DiagnoseRequest(BaseModel):
+    """Tek frame analizi — test laboratuvarı için."""
+    frame: str  # base64
+
+
+class DiagnoseResponse(BaseModel):
+    face_detected: bool = False
+    landmarks: list[list[float]] = []
+    ear: float = 0.0
+    mar: float = 0.0
+    head_yaw: float = 0.0
+    head_pitch: float = 0.0
+    eye_dist: float = 0.0
+    iris: dict = {}
+    key_points: dict = {}
+    thresholds: dict = {}
+    error: str = ""
 
 
 class UserListResponse(BaseModel):

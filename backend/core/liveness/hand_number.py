@@ -1,9 +1,14 @@
-# TODO: İsmail — Elle sayı gösterme modülü
-# MediaPipe Hands modeli gerektirir (face_landmarker.task değil, ayrı model).
-# pip install mediapipe (zaten kurulu)
-# from mediapipe.tasks.python import vision  (HandLandmarker)
-#
-# Ekranda gösterilen sayıyı (1-5) parmak açıklığına göre tespit et.
+"""
+HandNumberModule — KAPSAM DIŞI (v2 için planlandı)
+
+Aktivasyon için gerekenler:
+  1. models/ klasörüne hand_landmarker.task indir (MediaPipe Hand Landmarker)
+  2. FaceLandmarker'dan ayrı bir HandManager sınıfı oluştur
+  3. routes.py CHALLENGE_MODULES'a "hand_number" ekle
+  4. ChallengeFlow.tsx'e "hand_number" challenge ve UI ekle
+
+Ekranda gösterilen sayıyı (1-5) parmak açıklığına göre tespit edecek.
+"""
 
 import numpy as np
 from core.liveness.base import LivenessModule, ModuleResult

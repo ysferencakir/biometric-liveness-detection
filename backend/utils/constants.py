@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 # --- Kamera ---
 CAMERA_WIDTH = 640
@@ -10,8 +10,11 @@ HAAR_SCALE_FACTOR = 1.1
 HAAR_MIN_NEIGHBORS = 4
 
 # --- Yüz Tanıma ---
-# Bhattacharyya mesafesinden dönüştürülen benzerlik skoru eşiği (0–1)
-FACE_MATCH_THRESHOLD = 0.50
+# Cosine similarity eşiği (0–1):
+#   deepface/Facenet  → aynı kişi genellikle 0.50–0.70, öneri: 0.40
+#   MediaPipe landmark → aynı kişi genellikle 0.90+,    öneri: 0.80
+# .env dosyasında FACE_MATCH_THRESHOLD ile override edilebilir
+FACE_MATCH_THRESHOLD = 0.40
 # Giriş onayı için art arda kaç frame eşleşmeli
 MIN_CONSECUTIVE_MATCHES = 3
 # Kayan ortalama için güven geçmişi penceresi (frame sayısı)
@@ -23,9 +26,10 @@ LOGIN_MAX_DURATION = 30
 
 # --- Canlılık Tespiti ---
 # Göz en-boy oranı — bu değerin altındaysa göz kapalı sayılır
-EAR_THRESHOLD = 0.2
-# Canlı kabul için minimum göz kırpma sayısı
-MIN_BLINKS = 2
+# 0.25 daha geniş tolerans sağlar (hızlı veya hafif kırpmalar da yakalanır)
+EAR_THRESHOLD = 0.25
+# Canlı kabul için minimum göz kırpma sayısı (1 kırpma yeterli)
+MIN_BLINKS = 1
 # Son 10 frame içinde ağız hareketi olması için minimum MAR değişimi
 MAR_DELTA_THRESHOLD = 0.04
 MAR_WINDOW = 10
@@ -34,8 +38,10 @@ HEAD_MOTION_THRESHOLD = 0.08
 HEAD_MOTION_WINDOW = 15
 # Karar vermeden önce geçmesi gereken minimum süre (saniye)
 MIN_ELAPSED_BEFORE_DECISION = 3
-# Canlı sayılmak için geçilmesi gereken minimum test adedi (5 üzerinden)
-MIN_PASSED_CHECKS = 4
+# Canlı sayılmak için geçilmesi gereken minimum test adedi
+# Aktif modül: blink + eye_movement + head_movement + mouth_movement = 4
+# 2 geçerse canlı kabul et (kullanıcıya rastgele 2 challenge sorulduğu için)
+MIN_PASSED_CHECKS = 2
 
 # --- 3D Derinlik Kontrolü ---
 # Sahte fotoğraf filtresi: göz mesafesi / yüz yüksekliği oranı
@@ -56,6 +62,7 @@ RIGHT_IRIS_INDICES = [473, 474, 475, 476, 477]
 EYE_MOVEMENT_THRESHOLD = 8.0
 
 # --- Dosya Yolları ---
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(BASE_DIR, "..", "models", "face_landmarker.task")
-DB_PATH = os.path.join(BASE_DIR, "..", "faces_db.pkl")
+_BACKEND_DIR = Path(__file__).resolve().parent.parent   # backend/
+_PROJECT_ROOT = _BACKEND_DIR.parent                     # proje kökü
+MODEL_PATH = str(_PROJECT_ROOT / "models" / "face_landmarker.task")
+DB_PATH = str(_PROJECT_ROOT / "faces_db.pkl")

@@ -1,6 +1,6 @@
 import logo from "../assets/emu-logo.png";
 
-type Page = "home" | "login" | "register" | "users";
+type Page = "home" | "login" | "register" | "users" | "diagnostic";
 
 interface Props {
   onNavigate: (page: Page) => void;
@@ -29,6 +29,12 @@ export function HomePage({ onNavigate }: Props) {
           className="w-full rounded-2xl bg-neutral-200 hover:bg-neutral-300 transition text-neutral-700 text-base font-medium py-4"
         >
           Kullanıcı Yönetimi
+        </button>
+        <button
+          onClick={() => onNavigate("diagnostic")}
+          className="w-full rounded-2xl bg-neutral-100 hover:bg-neutral-200 border border-dashed border-neutral-300 transition text-neutral-500 text-sm font-medium py-3 flex items-center justify-center gap-2"
+        >
+          🔬 Test Laboratuvarı
         </button>
       </div>
     </div>

@@ -9,6 +9,12 @@ class Settings:
     SECRET_KEY: str = os.getenv("SECRET_KEY", "degistir-bunu-production-da")
     DEBUG: bool = os.getenv("DEBUG", "true").lower() == "true"
 
+    # CORS — virgülle ayrılmış origin listesi, örn: http://localhost:5173,http://localhost:3000
+    # Development'ta * ile tüm origin'lere izin verilebilir
+    CORS_ORIGINS: list[str] = os.getenv(
+        "CORS_ORIGINS", "http://localhost:5173"
+    ).split(",")
+
     # Firebase (opsiyonel — şimdilik pickle DB kullanılıyor)
     FIREBASE_CREDENTIALS: str = os.getenv("FIREBASE_CREDENTIALS", "")
     FIRESTORE_PROJECT_ID: str = os.getenv("FIRESTORE_PROJECT_ID", "")
